@@ -192,7 +192,21 @@ describe('switchMap', () => {
   //   expectSubscriptions(y.subscriptions).toBe(ysubs);
   //   expectSubscriptions(e1.subscriptions).toBe(e1subs);
   // });
-  //
+
+  it('t:cplx', () => {
+    const x =    cold(    '--a--b|');
+    const e1 =    hot('----x--------|');
+    const expected =  '------a--b---|';
+
+    const lookup = {x: x};
+    const result = e1.pipe(
+      mergeMap(x => of(x)),
+      switchMap(v => lookup[v]),
+      mergeMap(x => of(x)),
+    );
+
+    expectObservable(result).toBe(expected);
+  });
   // it('should stop listening to a synchronous observable when unsubscribed', () => {
   //   const sideEffects: number[] = [];
   //   const synchronousObservable = concat(
