@@ -161,40 +161,40 @@ describe('mergeMap', () => {
     });
   });
 
-  // it('should mergeMap many regular interval inners', () => {
-  //   const a =   cold('----a---a---a---(a|)                    ');
-  //   const b =   cold(    '----b---b---(b|)                    ');
-  //   const c =   cold(                '----c---c---c---c---(c|)');
-  //   const d =   cold(                        '----(d|)        ');
-  //   const e1 =   hot('a---b-----------c-------d-------|       ');
-  //   const e1subs =   '^                               !       ';
-  //   const expected = '----a---(ab)(ab)(ab)c---c---(cd)c---(c|)';
-  //
-  //   const observableLookup = { a: a, b: b, c: c, d: d };
-  //   const source = e1.pipe(mergeMap((value) => observableLookup[value]));
-  //
-  //   expectObservable(source).toBe(expected);
-  //   expectSubscriptions(e1.subscriptions).toBe(e1subs);
-  // });
-  //
-  // it('should map values to constant resolved promises and merge', (done) => {
-  //   const source = from([4, 3, 2, 1]);
-  //   const project = (value: any) => from(Promise.resolve(42));
-  //
-  //   const results: number[] = [];
-  //   source.pipe(mergeMap(project)).subscribe(
-  //     (x) => {
-  //       results.push(x);
-  //     },
-  //     (err) => {
-  //       done(new Error('Subscriber error handler not supposed to be called.'));
-  //     },
-  //     () => {
-  //       expect(results).to.deep.equal([42, 42, 42, 42]);
-  //       done();
-  //     });
-  // });
-  //
+  it('should mergeMap many regular interval inners', () => {
+    const a =   cold('----a---a---a---(a|)                    ');
+    const b =   cold(    '----b---b---(b|)                    ');
+    const c =   cold(                '----c---c---c---c---(c|)');
+    const d =   cold(                        '----(d|)        ');
+    const e1 =   hot('a---b-----------c-------d-------|       ');
+    const e1subs =   '^                               !       ';
+    const expected = '----a---(ab)(ab)(ab)c---c---(cd)c---(c|)';
+
+    const observableLookup = { a: a, b: b, c: c, d: d };
+    const source = e1.pipe(mergeMap((value) => observableLookup[value]));
+
+    expectObservable(source).toBe(expected);
+    expectSubscriptions(e1.subscriptions).toBe(e1subs);
+  });
+
+  it('should map values to constant resolved promises and merge', (done) => {
+    const source = from([4, 3, 2, 1]);
+    const project = (value: any) => from(Promise.resolve(42));
+
+    const results: number[] = [];
+    source.pipe(mergeMap(project)).subscribe(
+      (x) => {
+        results.push(x);
+      },
+      (err) => {
+        done(new Error('Subscriber error handler not supposed to be called.'));
+      },
+      () => {
+        expect(results).to.deep.equal([42, 42, 42, 42]);
+        done();
+      });
+  });
+
   // it('should map values to constant rejected promises and merge', (done) => {
   //   const source = from([4, 3, 2, 1]);
   //   const project = function (value: any) {
